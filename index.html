@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #007bff;
+        }
+    </style>
+    <script>
+        async function getPrediction() {
+            const nitrogen = document.getElementById('nitrogen').value;
+            const phosphorus = document.getElementById('phosphorus').value;
+            const potassium = document.getElementById('potassium').value;
+            const temperature = document.getElementById('temperature').value;
+            const humidity = document.getElementById('humidity').value;
+            const ph = document.getElementById('ph').value;
+            const rainfall = document.getElementById('rainfall').value;
+            
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    nitrogen: parseFloat(nitrogen),
+                    phosphorus: parseFloat(phosphorus),
+                    potassium: parseFloat(potassium),
+                    temperature: parseFloat(temperature),
+                    humidity: parseFloat(humidity),
+                    ph: parseFloat(ph),
+                    rainfall: parseFloat(rainfall)
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = result.crop ? 'Recommended Crop: ' + result.crop : 'Error: ' + result.error;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Crop Recommendation System</h2>
+        <label>Nitrogen:</label>
+        <input type="number" id="nitrogen">
+        
+        <label>Phosphorus:</label>
+        <input type="number" id="phosphorus">
+        
+        <label>Potassium:</label>
+        <input type="number" id="potassium">
+        
+        <label>Temperature (°C):</label>
+        <input type="number" id="temperature">
+        
+        <label>Humidity (%):</label>
+        <input type="number" id="humidity">
+        
+        <label>pH Level:</label>
+        <input type="number" id="ph">
+        
+        <label>Rainfall (mm):</label>
+        <input type="number" id="rainfall">
+        
+        <button onclick="getPrediction()">Predict Crop</button>
+        
+        <h3 id="result"></h3>
+    </div>
+</body>
+</html>
