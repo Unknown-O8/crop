@@ -1,5 +1,5 @@
 flask
 numpy
 scikit-learn
-pickle5
+pickle-mixin
 gunicorn
